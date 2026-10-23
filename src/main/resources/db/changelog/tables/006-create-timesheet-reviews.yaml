@@ -1,0 +1,51 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 006-create-timesheet-reviews
+      author: zodiakk
+
+      changes:
+        - createTable:
+            tableName: timesheet_reviews
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: timesheet_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: reviewer_employee_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: decision
+                  type: VARCHAR(20)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: comment
+                  type: TEXT
+              - column:
+                  name: reviewed_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: timesheet_reviews
+            baseColumnNames: timesheet_id
+            referencedTableName: timesheets
+            referencedColumnNames: id
+            constraintName: fk_timesheet_review_timesheet
+
+        - sql:
+            dbms: postgresql
+            sql: |
+              ALTER TABLE timesheet_reviews ADD CONSTRAINT chk_timesheet_review_comment CHECK (decision <> 'REJECT' OR comment IS NOT NULL);

@@ -1,0 +1,56 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 003-create-employee-work-schedules
+      author: zodiakk
+
+      changes:
+        - createTable:
+            tableName: employee_work_schedules
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: employee_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: schedule_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: valid_from
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: valid_to
+                  type: DATE
+              - column:
+                  name: created_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: updated_at
+                  type: TIMESTAMP WITH TIME ZONE
+                  constraints:
+                    nullable: false
+
+        - addForeignKeyConstraint:
+            baseTableName: employee_work_schedules
+            baseColumnNames: schedule_id
+            referencedTableName: work_schedules
+            referencedColumnNames: id
+            constraintName: fk_employee_work_schedule_schedule
+
+        - sql:
+            dbms: postgresql
+            sql: |
+              ALTER TABLE employee_work_schedules ADD CONSTRAINT chk_employee_work_schedule_dates CHECK (valid_to IS NULL OR valid_to >= valid_from);

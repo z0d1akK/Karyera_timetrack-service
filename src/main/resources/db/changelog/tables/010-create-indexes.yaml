@@ -1,0 +1,20 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 010-create-indexes
+      author: zodiakk
+
+      changes:
+        - sql:
+            dbms: postgresql
+            sql: |
+              CREATE EXTENSION IF NOT EXISTS btree_gist;
+              CREATE INDEX idx_time_entry_employee_date ON time_entries (employee_id, work_date);
+              CREATE INDEX idx_time_entry_project_date ON time_entries (project_id, work_date);
+              CREATE INDEX idx_time_entry_task ON time_entries (task_id);
+              CREATE INDEX idx_time_entry_timesheet ON time_entries (timesheet_id);
+              CREATE INDEX idx_timesheet_employee_period ON timesheets (employee_id, period_start DESC);
+              CREATE INDEX idx_timesheet_pending ON timesheets (status, submitted_at) WHERE status = 'SUBMITTED';
+              CREATE INDEX idx_employee_schedule_dates ON employee_work_schedules (employee_id, valid_from, valid_to);
+              CREATE INDEX idx_time_entry_audit_entry ON time_entry_audit (time_entry_id, created_at);
+              ALTER TABLE employee_work_schedules ADD CONSTRAINT ex_employee_schedule_overlap EXCLUDE USING gist (employee_id WITH =, daterange(valid_from, COALESCE(valid_to + 1, 'infinity'::date), '[)') WITH &&);

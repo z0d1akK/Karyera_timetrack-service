@@ -1,0 +1,56 @@
+databaseChangeLog:
+
+  - changeSet:
+      id: 002-create-work-schedule-days
+      author: zodiakk
+
+      changes:
+        - createTable:
+            tableName: work_schedule_days
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: schedule_id
+                  type: UUID
+                  constraints:
+                    nullable: false
+              - column:
+                  name: day_of_week
+                  type: SMALLINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: planned_minutes
+                  type: INTEGER
+                  constraints:
+                    nullable: false
+              - column:
+                  name: start_time
+                  type: TIME
+              - column:
+                  name: end_time
+                  type: TIME
+
+        - addForeignKeyConstraint:
+            baseTableName: work_schedule_days
+            baseColumnNames: schedule_id
+            referencedTableName: work_schedules
+            referencedColumnNames: id
+            constraintName: fk_work_schedule_day_schedule
+
+        - addUniqueConstraint:
+            tableName: work_schedule_days
+            columnNames: schedule_id, day_of_week
+            constraintName: uq_work_schedule_day
+
+        - sql:
+            dbms: postgresql
+            sql: |
+              ALTER TABLE work_schedule_days ADD CONSTRAINT chk_work_schedule_day_of_week CHECK (day_of_week BETWEEN 1 AND 7);
+              ALTER TABLE work_schedule_days ADD CONSTRAINT chk_work_schedule_day_minutes CHECK (planned_minutes BETWEEN 0 AND 1440);
+              ALTER TABLE work_schedule_days ADD CONSTRAINT chk_work_schedule_day_times CHECK (start_time IS NULL OR end_time IS NULL OR end_time > start_time);

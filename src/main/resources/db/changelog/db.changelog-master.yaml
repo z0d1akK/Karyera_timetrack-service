@@ -1,0 +1,31 @@
+databaseChangeLog:
+
+  - include:
+      file: db/changelog/tables/001-create-work-schedules.yaml
+
+  - include:
+      file: db/changelog/tables/002-create-work-schedule-days.yaml
+
+  - include:
+      file: db/changelog/tables/003-create-employee-work-schedules.yaml
+
+  - include:
+      file: db/changelog/tables/004-create-timesheets.yaml
+
+  - include:
+      file: db/changelog/tables/005-create-time-entries.yaml
+
+  - include:
+      file: db/changelog/tables/006-create-timesheet-reviews.yaml
+
+  - include:
+      file: db/changelog/tables/007-create-time-entry-audit.yaml
+
+  - include:
+      file: db/changelog/tables/008-create-outbox-events.yaml
+
+  - include:
+      file: db/changelog/tables/009-create-processed-events.yaml
+
+  - include:
+      file: db/changelog/tables/010-create-indexes.yaml
