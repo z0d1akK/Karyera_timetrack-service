@@ -2,17 +2,19 @@ package com.zodiakk.timetrackservice.timeentry.entity;
 
 import com.zodiakk.timetrackservice.common.entity.CreatedEntity;
 import com.zodiakk.timetrackservice.common.enums.TimeEntryAuditAction;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import java.util.UUID;
-import org.hibernate.annotations.ColumnTransformer;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.ColumnTransformer;
+
+import java.util.UUID;
 
 @Getter
 @Setter

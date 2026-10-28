@@ -1,6 +1,7 @@
 package com.zodiakk.timetrackservice.schedule.entity;
 
 import com.zodiakk.timetrackservice.common.entity.VersionedEntity;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Table;
