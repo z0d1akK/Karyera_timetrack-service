@@ -1,0 +1,37 @@
+databaseChangeLog:
+  - changeSet:
+      id: 011-seed-standard-40
+      author: zodiakk
+      comment: Default five-day 40-hour schedule
+      preConditions:
+        - onFail: MARK_RAN
+        - sqlCheck:
+            expectedResult: 0
+            sql: SELECT COUNT(*) FROM work_schedules WHERE code = 'STANDARD_40'
+      changes:
+        - sql:
+            dbms: postgresql
+            splitStatements: true
+            sql: |
+              INSERT INTO work_schedules (id, code, name, description, timezone, active, version, created_at, updated_at)
+              VALUES (
+                  '55555555-5555-4555-8555-555555555555',
+                  'STANDARD_40',
+                  'Пятидневная неделя, 40 часов',
+                  'Типовой график без праздничного календаря',
+                  'Europe/Vilnius',
+                  TRUE,
+                  0,
+                  NOW(),
+                  NOW()
+              );
+
+              INSERT INTO work_schedule_days (id, schedule_id, day_of_week, planned_minutes, start_time, end_time)
+              VALUES
+                  ('55555555-5555-4555-8555-555555555501', '55555555-5555-4555-8555-555555555555', 1, 480, '09:00', '18:00'),
+                  ('55555555-5555-4555-8555-555555555502', '55555555-5555-4555-8555-555555555555', 2, 480, '09:00', '18:00'),
+                  ('55555555-5555-4555-8555-555555555503', '55555555-5555-4555-8555-555555555555', 3, 480, '09:00', '18:00'),
+                  ('55555555-5555-4555-8555-555555555504', '55555555-5555-4555-8555-555555555555', 4, 480, '09:00', '18:00'),
+                  ('55555555-5555-4555-8555-555555555505', '55555555-5555-4555-8555-555555555555', 5, 480, '09:00', '18:00'),
+                  ('55555555-5555-4555-8555-555555555506', '55555555-5555-4555-8555-555555555555', 6, 0, NULL, NULL),
+                  ('55555555-5555-4555-8555-555555555507', '55555555-5555-4555-8555-555555555555', 7, 0, NULL, NULL);
