@@ -1,0 +1,70 @@
+databaseChangeLog:
+  - changeSet:
+      id: 012-seed-demo-timesheet
+      author: zodiakk
+      comment: Approved timesheet for demo Java developers
+      preConditions:
+        - onFail: MARK_RAN
+        - sqlCheck:
+            expectedResult: 0
+            sql: SELECT COUNT(*) FROM timesheets WHERE id = '9a1b0c2d-3e4f-4a5b-8c7d-000000000561'
+      changes:
+        - sql:
+            dbms: postgresql
+            splitStatements: true
+            sql: |
+              INSERT INTO employee_work_schedules (id, employee_id, schedule_id, valid_from, valid_to, created_at, updated_at)
+              VALUES
+              ('9a1b0c2d-3e4f-4a5b-8c7d-000000000551', '9a1b0c2d-3e4f-4a5b-8c7d-000000000101', '55555555-5555-4555-8555-555555555555', DATE '2024-03-01', NULL, NOW(), NOW()),
+              ('9a1b0c2d-3e4f-4a5b-8c7d-000000000552', '9a1b0c2d-3e4f-4a5b-8c7d-000000000104', '55555555-5555-4555-8555-555555555555', DATE '2023-09-01', NULL, NOW(), NOW());
+
+              INSERT INTO timesheets (
+                  id, employee_id, period_start, period_end, status, planned_minutes,
+                  submitted_at, approved_at, approved_by, version, created_at, updated_at
+              ) VALUES
+              (
+                  '9a1b0c2d-3e4f-4a5b-8c7d-000000000561',
+                  '9a1b0c2d-3e4f-4a5b-8c7d-000000000101',
+                  date_trunc('week', CURRENT_DATE)::date - 7,
+                  date_trunc('week', CURRENT_DATE)::date - 1,
+                  'APPROVED', 2400, NOW() - INTERVAL '3 days', NOW() - INTERVAL '2 days',
+                  '9a1b0c2d-3e4f-4a5b-8c7d-000000000102', 0, NOW() - INTERVAL '6 days', NOW()
+              ),
+              (
+                  '9a1b0c2d-3e4f-4a5b-8c7d-000000000562',
+                  '9a1b0c2d-3e4f-4a5b-8c7d-000000000104',
+                  date_trunc('week', CURRENT_DATE)::date - 7,
+                  date_trunc('week', CURRENT_DATE)::date - 1,
+                  'APPROVED', 2400, NOW() - INTERVAL '3 days', NOW() - INTERVAL '2 days',
+                  '9a1b0c2d-3e4f-4a5b-8c7d-000000000102', 0, NOW() - INTERVAL '6 days', NOW()
+              );
+
+              INSERT INTO timesheet_reviews (id, timesheet_id, reviewer_employee_id, decision, comment, reviewed_at)
+              VALUES
+              ('9a1b0c2d-3e4f-4a5b-8c7d-000000000571', '9a1b0c2d-3e4f-4a5b-8c7d-000000000561', '9a1b0c2d-3e4f-4a5b-8c7d-000000000102', 'APPROVE', 'Ок', NOW() - INTERVAL '2 days'),
+              ('9a1b0c2d-3e4f-4a5b-8c7d-000000000572', '9a1b0c2d-3e4f-4a5b-8c7d-000000000562', '9a1b0c2d-3e4f-4a5b-8c7d-000000000102', 'APPROVE', 'Ок', NOW() - INTERVAL '2 days');
+
+              INSERT INTO time_entries (
+                  id, employee_id, project_id, task_id, project_assignment_id, work_date, duration_minutes,
+                  description, status, timesheet_id, version, created_at, updated_at, created_by
+              ) VALUES
+              (
+                  '9a1b0c2d-3e4f-4a5b-8c7d-000000000581',
+                  '9a1b0c2d-3e4f-4a5b-8c7d-000000000101',
+                  '9a1b0c2d-3e4f-4a5b-8c7d-000000000511',
+                  '9a1b0c2d-3e4f-4a5b-8c7d-000000000531',
+                  '9a1b0c2d-3e4f-4a5b-8c7d-000000000521',
+                  date_trunc('week', CURRENT_DATE)::date - 6,
+                  480, 'Оценки', 'APPROVED', '9a1b0c2d-3e4f-4a5b-8c7d-000000000561',
+                  0, NOW(), NOW(), '9a1b0c2d-3e4f-4a5b-8c7d-000000000101'
+              ),
+              (
+                  '9a1b0c2d-3e4f-4a5b-8c7d-000000000582',
+                  '9a1b0c2d-3e4f-4a5b-8c7d-000000000104',
+                  '9a1b0c2d-3e4f-4a5b-8c7d-000000000511',
+                  '9a1b0c2d-3e4f-4a5b-8c7d-000000000532',
+                  '9a1b0c2d-3e4f-4a5b-8c7d-000000000523',
+                  date_trunc('week', CURRENT_DATE)::date - 6,
+                  480, 'Профиль', 'APPROVED', '9a1b0c2d-3e4f-4a5b-8c7d-000000000562',
+                  0, NOW(), NOW(), '9a1b0c2d-3e4f-4a5b-8c7d-000000000104'
+              );

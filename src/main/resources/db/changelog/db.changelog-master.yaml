@@ -32,3 +32,6 @@ databaseChangeLog:
 
   - include:
       file: db/changelog/tables/011-seed-standard-40.yaml
+
+  - include:
+      file: db/changelog/tables/012-seed-demo-timesheet.yaml
